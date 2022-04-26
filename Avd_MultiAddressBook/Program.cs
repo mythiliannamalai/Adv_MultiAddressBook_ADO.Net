@@ -53,10 +53,55 @@ namespace Avd_MultiAddressBook
                 return contacts;
             }
         }
+        //UC-2 Add contact        
+        public static void Add_Contact()
+        {
+            List<Contact> contacts = new List<Contact>();
+            Contact contactDetails = new Contact();
+            Console.WriteLine("First Name :");
+            contactDetails.FirstName = Console.ReadLine();
+            Console.WriteLine("Last Name :");
+            contactDetails.LastName = Console.ReadLine();
+            Console.WriteLine("Address :");
+            contactDetails.Address = Console.ReadLine();
+            Console.WriteLine("City :");
+            contactDetails.City = Console.ReadLine();
+            Console.WriteLine("State :");
+            contactDetails.State = Console.ReadLine();
+            Console.WriteLine("Zip code :");
+            contactDetails.Zipcode = Console.ReadLine();
+            Console.WriteLine("Phone Number :");
+            contactDetails.PhoneNumber = Console.ReadLine();
+            Console.WriteLine("Email Id :");
+            contactDetails.EmailId = Console.ReadLine();
+            SqlConnection connection = new SqlConnection(connectionString);
+            string spname = "dbo.Add_Contact";
+            using (connection)
+            {
+                SqlCommand sqlCommand = new SqlCommand(spname, connection);
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                sqlCommand.Parameters.AddWithValue("@FirstName", contactDetails.FirstName);
+                sqlCommand.Parameters.AddWithValue("@LastName", contactDetails.LastName);
+                sqlCommand.Parameters.AddWithValue("@Address", contactDetails.Address);
+                sqlCommand.Parameters.AddWithValue("@City", contactDetails.City);
+                sqlCommand.Parameters.AddWithValue("@State", contactDetails.State);
+                sqlCommand.Parameters.AddWithValue("@Zipcode", contactDetails.Zipcode);
+                sqlCommand.Parameters.AddWithValue("@PhoneNumber", contactDetails.PhoneNumber);
+                sqlCommand.Parameters.AddWithValue("@EmailId", contactDetails.EmailId);
+                connection.Open();
+                SqlDataReader reader = sqlCommand.ExecuteReader();
+                Console.WriteLine(contactDetails.FirstName + "," + contactDetails.LastName + "," + contactDetails.Address + ","
+                    + contactDetails.City + "," + contactDetails.State + "," + contactDetails.Zipcode, ","
+                    + contactDetails.PhoneNumber + "," + contactDetails.EmailId);
+                contacts.Add(contactDetails);
+                connection.Close();
+            }
+        }
         static void Main(string[]args)
         {
             AddressBook.EstablishConnection();
             AddressBook.CreateContact();
+            AddressBook.Add_Contact();
         }
     }
 }
