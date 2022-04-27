@@ -272,8 +272,8 @@ namespace Avd_MultiAddressBook
         static void Main(string[]args)
         {
                 AddressBook.EstablishConnection();
-                //AddressBook.CreateContact();
-                //AddressBook.Create_MultiAddressBook();
+                AddressBook.CreateContact();
+                AddressBook.Create_MultiAddressBook();
                 int val;
               do
               {
