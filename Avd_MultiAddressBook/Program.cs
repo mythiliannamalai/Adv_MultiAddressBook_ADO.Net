@@ -204,37 +204,56 @@ namespace Avd_MultiAddressBook
                 }
             }
         }
-        static void Main(string[]args)
+        public static List<Contact> Create_MultiAddressBook()
         {
-            AddressBook.EstablishConnection();
-            //AddressBook.CreateContact();
-            int val;
-            do
+            List<Contact> contacts = new List<Contact>();
+            Contact contactDetails = new Contact();
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            string spname = "dbo.Create_MultiAddressBook";
+            using (connection)
             {
+                SqlCommand sqlCommand = new SqlCommand(spname, connection);
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                SqlDataReader reader = sqlCommand.ExecuteReader();
+                connection.Close();
+                return contacts;
+            }
+        }
+            static void Main(string[]args)
+            {
+                AddressBook.EstablishConnection();
+                AddressBook.CreateContact();
+                AddressBook.Create_MultiAddressBook();
+                int val;
+              do
+              {
                 Console.WriteLine("1.Add contact");
                 Console.WriteLine("2.Edit contact");
                 Console.WriteLine("3.Delete contact");
                 Console.WriteLine("0.Exit");
                 Console.WriteLine("Enter your choice");
-                val=int.Parse(Console.ReadLine());
-            
+                val = int.Parse(Console.ReadLine());
+
                 switch (val)
                 {
                     case 1:
-                    AddressBook.Add_Contact();
+                        AddressBook.Add_Contact();
                         break;
-                        case 2:
-                    AddressBook.Edit_Contact();
+                    case 2:
+                        AddressBook.Edit_Contact();
                         break;
-                        case 3:
-                   AddressBook.Delete_Contact();
+                    case 3:
+                        AddressBook.Delete_Contact();
                         break;
                     case 0:
                         Console.WriteLine("****EXIT****");
                         break;
                 }
-                
-            }while(val!=0);
-        }
+
+              } while (val != 0);
+            }
+        
     }
 }
