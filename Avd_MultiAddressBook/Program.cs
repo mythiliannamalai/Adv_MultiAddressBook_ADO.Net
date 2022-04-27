@@ -222,11 +222,58 @@ namespace Avd_MultiAddressBook
                 return contacts;
             }
         }
-            static void Main(string[]args)
+        //UC-8,9,10 Retrive value base on city and state and count
+        public static void Search_City_And_State()
+        {
+            List<Contact> contacts = new List<Contact>();
+            Contact contactDetails = new Contact();
+            SqlConnection connection = new SqlConnection(connectionString);
+            string spname = "dbo.Search_City_State";
+            using (connection)
             {
+                SqlCommand sqlCommand = new SqlCommand(spname, connection);
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                Console.WriteLine("Retrive Contact based on city ot state");
+                Console.WriteLine("---------------------------------------");
+                Console.WriteLine("Enter City :");
+                contactDetails.City = Console.ReadLine();
+                sqlCommand.Parameters.AddWithValue("@City", contactDetails.City);
+                Console.WriteLine("Enter State :");
+                contactDetails.State = Console.ReadLine();
+                sqlCommand.Parameters.AddWithValue("@State", contactDetails.State);
+                connection.Open();
+                SqlDataReader reader = sqlCommand.ExecuteReader();
+                if (reader.Read())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            contactDetails.FirstName = (string)reader["FirstName"];
+                            contactDetails.LastName = (string)reader["LastName"];
+                            contactDetails.Address = (string)reader["Address"];
+                            contactDetails.City = (string)reader["City"];
+                            contactDetails.State = (string)reader["State"];
+                            contactDetails.Zipcode = (string)reader["Zipcode"];
+                            contactDetails.PhoneNumber = (string)reader["PhoneNumber"];
+                            contactDetails.EmailId = (string)reader["EmailId"];
+                            contacts.Add(contactDetails);
+                            Console.WriteLine(contactDetails.FirstName + "," + contactDetails.LastName + "," + contactDetails.Address + ","
+                                + contactDetails.City + "," + contactDetails.State + "," + contactDetails.Zipcode, ","
+                               + contactDetails.PhoneNumber + "," + contactDetails.EmailId);
+                            Console.WriteLine("Contact Count :");
+                            Console.WriteLine(contacts.Count());
+                        }
+                        connection.Close();
+                    }
+                }
+            }
+        }
+        static void Main(string[]args)
+        {
                 AddressBook.EstablishConnection();
-                AddressBook.CreateContact();
-                AddressBook.Create_MultiAddressBook();
+                //AddressBook.CreateContact();
+                //AddressBook.Create_MultiAddressBook();
                 int val;
               do
               {
@@ -248,13 +295,16 @@ namespace Avd_MultiAddressBook
                     case 3:
                         AddressBook.Delete_Contact();
                         break;
+                    case 4:
+                        AddressBook.Search_City_And_State();
+                        break;
                     case 0:
                         Console.WriteLine("****EXIT****");
                         break;
                 }
 
               } while (val != 0);
-            }
+        }
         
     }
 }
