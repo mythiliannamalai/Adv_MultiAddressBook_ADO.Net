@@ -53,7 +53,7 @@ namespace Avd_MultiAddressBook
                 return contacts;
             }
         }
-        //UC-2 Add contact        
+        //UC-2 && 5 Add contact        
         public static void Add_Contact()
         {
             List<Contact> contacts = new List<Contact>();
@@ -207,10 +207,34 @@ namespace Avd_MultiAddressBook
         static void Main(string[]args)
         {
             AddressBook.EstablishConnection();
-            AddressBook.CreateContact();
-            AddressBook.Add_Contact();
-            AddressBook.Edit_Contact();
-            AddressBook.Delete_Contact();
+            //AddressBook.CreateContact();
+            int val;
+            do
+            {
+                Console.WriteLine("1.Add contact");
+                Console.WriteLine("2.Edit contact");
+                Console.WriteLine("3.Delete contact");
+                Console.WriteLine("0.Exit");
+                Console.WriteLine("Enter your choice");
+                val=int.Parse(Console.ReadLine());
+            
+                switch (val)
+                {
+                    case 1:
+                    AddressBook.Add_Contact();
+                        break;
+                        case 2:
+                    AddressBook.Edit_Contact();
+                        break;
+                        case 3:
+                   AddressBook.Delete_Contact();
+                        break;
+                    case 0:
+                        Console.WriteLine("****EXIT****");
+                        break;
+                }
+                
+            }while(val!=0);
         }
     }
 }
